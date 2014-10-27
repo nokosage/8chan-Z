@@ -1,0 +1,12 @@
+0.1.0
+- Initial implementation (barebones)
+- Removes old native JavaScript and all dependencies
+- Destroys old thread HTML
+- Creates new threads as objects containing post objects
+  - (window.Threads global scope)
+  - Uses the API to create new posts
+  - Organized HTML for future scripts
+  - Thread object for simple post modifications
+- Allows user to hide posts with stubs
+- Hard-coded auto-thread loading from API
+- TODO: Many, many things

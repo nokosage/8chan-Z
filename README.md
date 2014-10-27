@@ -7,11 +7,15 @@ As it currently is, this script is VERY barebones. I would not recommend using i
 
 Installation
 -------
-<h2>Step 1: Install one of the following:</h2>
+<h4>Step 1:</h4> 
+
+<h6>Install one of the following:<h6>
 
 For Firefox: Greasemonkey
+
 For Chrome: Tampermonkey
+
 For Opera: Violentmonkey
 
-<h2>Step 2:</h2>
+<h4>Step 2:</h4>
 <h1><a href="https://github.com/tux3/8chan-X/raw/master/8chan-x.user.js">Install 8chan-Z</a></h1>

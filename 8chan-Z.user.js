@@ -8,6 +8,8 @@
 // @run-at      document-start
 // @version     0.1.0
 // @grant       none
+// @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
+// @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /*
@@ -411,7 +413,7 @@
   };
   
   var Info = {
-    NAMESPACE: '8chan-X.',
+    NAMESPACE: '8chan-Z.',
     VERSION: '0.1.0',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',

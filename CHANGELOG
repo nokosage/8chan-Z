@@ -1,4 +1,21 @@
-0.1.0
+0.2.0 - 10/28/2014
+- Added top menu
+  - Added anchor buttons
+- Additional CSS
+- Added stylesheet changer at the bottom of the page
+- Added last_modified for threads
+  - 8chan does not seem to have the right last_modified response header
+- Thread object tweaks
+- Changed event triggers
+- Added API global scope variable Z
+- Tweaked the script's API for use with 'use strict'
+- Added getters and setters to the Post object prototype
+  - Makes altering common post attributes slightly simpler
+  - If only pointers were possible in JavaScript...
+- Posts now create all user data, subjects, emails, tripcodes, names, etc.
+  - If they would not exist already
+
+0.1.0 - 10/28/2014
 - Initial implementation (barebones)
 - Removes old native JavaScript and all dependencies
 - Destroys old thread HTML

@@ -6,15 +6,15 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.2.0
+// @version     0.1.0
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /*
-  8chan Z v0.2.0
-  https://github.com/nokosage/8chan-Z/
+  8chan Z v0.1.0
+  some.website.i.have.not.made
 
   Developers:
   nokosage
@@ -244,12 +244,12 @@
     if (i != null) {
       if (t == 'POST') {
         var xd = new FormData();
-        for (var key in i) {
+        for (key in i) {
           xd.append(key, i[key]);
         }
       } else {
         xd = '?';
-        for (var key in i) {
+        for (key in i) {
           xd += key + '=' + i[key] + '&';
         }
         xd = xd.substring(0, (xd.length - 1));
@@ -259,7 +259,7 @@
     var x = new XMLHttpRequest();
     x.open(t, u, true);
     if (p != null) {
-      for (var key in p) {
+      for (key in p) {
         x.setRequestHeader(key, p[key]);
       }
     }
@@ -384,23 +384,19 @@
     return $.substr(p, 0, p.length - s.length) + s;
   };
   
-  $.date = function(t, modified) {
+  $.date = function(t) {
     var a, m, d, month, date, year, day, date, hour, minute, second;
     a = new Date(t * 1000);
     m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     d = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    month = a.getMonth();
+    month = a.getMonth() + 1;
     date = a.getDate();
-    year = a.getFullYear();
+    year = $.substr(a.getFullYear(), 2);
     day = a.getDay();
     hour = $.pad(a.getHours());
     minute = $.pad(a.getMinutes());
     second = $.pad(a.getSeconds());
-    if (modified === true) {
-      return a.toGMTString();
-    }
-    //Tue, 28 Oct 2014 01:01:55 GMT
-    return (month + 1) + '/' + date + '/' + $.substr(year, 2) + '(' + d[day] + ')' + hour + ':' + minute + ':' + second;
+    return month + '/' + date + '/' + year + '(' + d[day] + ')' + hour + ':' + minute + ':' + second;
   };
   
   $.bytes = function(s) {
@@ -418,7 +414,7 @@
   
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.2.0',
+    VERSION: '0.1.0',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
@@ -426,46 +422,12 @@
     threads: []
   };
   
-  var API = {
-    init: function() {
-      window.Z = {
-        Settings: Settings,
-        Threads: Threads.threads
-      };
-    }
-  };
-  
   var CSS = {
     Main: function() {
       Main.css = $.css('\
-#top_menu {\
-  box-shadow: 0 -15px 6px 15px rgba(0, 0, 0, 0.5);\
-  left: 0;\
-  line-height: 1.6;\
-  margin: -1px 0 0 -5px;\
-  padding: 0 5px;\
-  position: fixed;\
-  top: 0;\
-  width: 100%;\
-  z-index: 100;\
-}\
-.navButtons {\
-  left: 0;\
-  margin: 0 5px;\
-  position: absolute;\
-  text-align: center;\
-  width: 100%;\
-}\
-.navButtons > a {\
-  margin: 0 2px;\
-}\
 .fa {\
-  font-family: fontAwesome !important;\
+  font-family: fontAwesome;\
   font-size: 14px;\
-}\
-.stylechanger {\
-    float: right;\
-    font-weight: bold;\
 }\
 .postContainer {\
     position: relative;\
@@ -477,10 +439,16 @@
   top: 0;\
   text-decoration: none;\
 }\
+.hide-button:before {\
+  content: "";\
+}\
 .stub {\
   margin-bottom: -7px;\
   margin-left: 18px;\
   margin-top: -7px;\
+}\
+.show-button:before {\
+  content: "";\
 }\
 .hide {\
   display: none !important;\
@@ -508,74 +476,6 @@ div.post div.file .fileThumb {\
     }
   };
   
-  var Settings = {
-    styles: {
-      Yotsuba: '/stylesheets/yotsuba.css',
-      'Yotsuba-B': '/stylesheets/yotsuba_b.css',
-      Tomorrow: '/stylesheets/tomorrow.css',
-      Photon: '/stylesheets/photon.css',
-      Dark: '/stylesheets/dark.css'
-    },
-    title: false,
-    style: false,
-    styleChanger: false,
-    top_menu: false,
-    bottom_menu: false,
-    styleSelector: false,
-    navButtons: false,
-    init: function() {
-      var _ref;
-      Settings.style = (_ref = $('#stylesheet')) ? _ref : $.elm('link', {
-        id: 'stylesheet',
-        href: '/stylesheets/yotsuba.css',
-        type: 'text/css',
-        rel: 'styleshet'
-      }, h);
-      Settings.title = (_ref = $('title', h)) ? _ref : false;
-      Settings.top_menu = (_ref = $('div.boardlist')) ? _ref : false;
-      $.addClass($.att(Settings.top_menu, 'id', 'top_menu'), 'pages');
-      Settings.navButtons = $.elm('span', {
-        class: 'navButtons'
-      }, Settings.top_menu);
-      $.elm('a', {
-        href: '#bottom',
-        class: 'fa fa-arrow-down'
-      }, Settings.navButtons);
-      $.elm('a', {
-        href: '#top',
-        class: 'fa fa-arrow-up'
-      }, Settings.navButtons);
-      $.after($.elm('br'), Settings.top_menu);
-      $.after($.elm('div', {
-        id: 'top',
-        class: 'anchor'
-      }), Settings.top_menu);
-      
-      Settings.bottom_menu = (_ref = $('div.boardlist.bottom')) ? $.att(_ref, 'id', 'bottom_menu') : false;
-      Settings.styleChanger = $.elm('span', {
-        class: 'stylechanger'
-      }, Settings.bottom_menu);
-      $.add(Settings.styleChanger, $.tn('Style: '));
-      Settings.styleSelector = $.elm('select', {
-        id: 'styleSelector'
-      }, Settings.styleChanger);
-      for (var key in Settings.styles) {
-        $.text($.elm('option', {
-          value: Settings.styles[key]
-        }, Settings.styleSelector), key);
-      }
-      $.before($.elm('div', {
-        id: 'bottom',
-        class: 'anchor'
-      }, Settings.bottom_menu), Settings.bottom_menu.childNodes[0]);
-      
-      $.on(Settings.styleSelector, 'click', Settings.setStyle);
-    },
-    setStyle: function() {
-      Settings.style.href = Settings.styleSelector.value;
-    }
-  }
-  
   var Cleaner = {
     init: function() {
       Cleaner.overrideFunctions();
@@ -584,18 +484,19 @@ div.post div.file .fileThumb {\
     rebuildHead: function() {
       $.destroy($('head'));
       $.each($$('script'), $.destroy);
+      
       var _html = '<meta charset="utf-8">' +
                   '<link rel="stylesheet" media="screen" href="/stylesheets/style.css">' +
                   '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' +
                   '<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">' +
                   '<meta name="robots" content="noindex">' +
-                  '<link rel="stylesheet" type="text/css" id="stylesheet" href="/stylesheets/tomorrow.css">' +
+                  '<link rel="stylesheet" type="text/css" id="stylesheet" href="/stylesheets/yotsuba.css">' +
                   '<link rel="stylesheet" media="screen" href="/stylesheets/font-awesome/css/font-awesome.min.css">' +
                   '<link rel="stylesheet" href="/static/flags/flags.css">' +
                   '<link rel="stylesheet" type="text/css" href="/js/katex/katex.min.css">' +
                   '<script type="text/javascript">var configRoot="/";var inMod = false;var modRoot="/"+(inMod ? "mod.php?/" : "");</script>' +
                   '<title>/b/ - Random</title>';
-      h = $.htm($.elm('head', null, document.documentElement), _html);
+      $.htm($.elm('head', null, document.documentElement), _html);
     },
     destroyThreads: function(threads) {
       var _i, _ref;
@@ -635,13 +536,11 @@ div.post div.file .fileThumb {\
         }
       }
       //console.log(Threads.threads);
-      if (_new) {
-        $.event(Info.NAMESPACE + 'NewPosts', {
+      if (_new) 
+        $.event('8chanXThreadNewPosts', {
           posts: _new_posts
         });
-      }
-      Threads.threads[thread].last_modified = Sync.sync[0].last_modified;
-      $.event(Info.NAMESPACE + 'ThreadUpdated');
+      $.event('8chanXThreadUpdated');
     }
   };
   
@@ -651,24 +550,13 @@ div.post div.file .fileThumb {\
       
     },
     xhrThread: function(thread) {
-      var headers = {
-        //'If-Modified-Since': ((Threads.threads[thread]) ? $.date(Threads.threads[thread].last_modified, true) : 0),
-        'Best-Thread': '/b/read'
-      };
       $.xhr('GET', Info.PROTOCOL + '//' + Info.HOST + '/' + Info.board + '/res/' + thread + '.json', null, function(c) {
         var _i, r;
-        r = $.JSON(c.responseText)['posts'];
+        r = $.JSON(c.responseText)["posts"];
         for (_i = 0; _i < r.length; _i++)
           Sync.sync[_i] = r[_i];
         Threads.updateThread(thread);
-      }, headers);
-    }
-  };
-  
-  var Auto_Loader = {
-    timeout: 10,
-    run: function() {
-      Threads.run();
+      });
     }
   };
   
@@ -682,13 +570,13 @@ div.post div.file .fileThumb {\
       if (Timer.time == null) {
         Timer.time = 0;
       }
-      
-      Timer.check(Auto_Loader.timeout, Auto_Loader.run);
-      
+      if (Timer.check(10)) 
+        Threads.run();
+      //console.log(Timer.time);
       Timer.time++;
     },
-    check: function(t, fc) {
-      return (Timer.time % t === 0) ? fc() : false;
+    check: function(t) {
+      return (Timer.time % t === 0);
     }
   };
 
@@ -710,15 +598,12 @@ div.post div.file .fileThumb {\
       return console.log(Info.NAMESPACE + Info.VERSION + ": Initialization Complete.");
     },
     ready: function() {
-      Settings.init();
       Reply.init();
       Main.setThreads();
       Cleaner.destroyThreads(Info.threads);
       Threads.init();
       CSS.Main();
       Timer.init();
-      API.init();
-      $.event(g.NAMESPACE + 'Ready');
     },
     frontpage: function() {
       console.warn(Info.NAMESPACE + Info.VERSION + ": Frontpage not implemented yet.");
@@ -735,6 +620,7 @@ div.post div.file .fileThumb {\
       console.log(Info.NAMESPACE + Info.VERSION + ": Initializing View: Thread");
       Cleaner.init();
       $.time(50, Main.ready);
+      window.Threads = Threads.threads;
     },
     setBoard: function() {
       var path, _ref;
@@ -795,7 +681,6 @@ div.post div.file .fileThumb {\
       var root;
       this.ID = no;
       this.posts = {};
-      this.last_modified = 0;
       
       root = $.after($.elm('div', {
         id: 'thread_' + this.ID,
@@ -832,7 +717,7 @@ div.post div.file .fileThumb {\
       }, stub), $.htm(post.info));
       btnShow = $.elm('a', {
         id: 'p' + this.ID,
-        class: 'show-button post-button fa fa-plus-square-o',
+        class: 'show-button post-button fa',
         href: 'javascript:;'
       }, root);
       $.on(btnShow, 'click', this.show, this);
@@ -856,72 +741,6 @@ div.post div.file .fileThumb {\
       this.nodes.stub = false;
       this.nodes.buttonShow = false;
     };
-    Post.prototype.set = function(type, str, txt) {
-      var set, user;
-      user = this.user;
-      switch (txt) {
-        case 'txt':
-        case 'text':
-          set = $.text;
-          break;
-        case 'htm':
-        case 'html':
-          set = $.htm;
-          break;
-        default:
-          set = $.text;
-      }
-      switch (type) {
-        case 'com':
-        case 'comment':
-          return set(user.com, str);
-        case 'name':
-          return set(user.name, str);
-        case 'sub':
-        case 'subject':
-          return set(user.subject, str);
-        case 'email':
-          return set(user.email, str);
-        case 'trip':
-        case 'tripcode':
-          return set(user.trip, str);
-        default:
-          return;
-      }
-    };
-    Post.prototype.get = function(type, txt) {
-      var get, user;
-      user = this.user;
-      switch (txt) {
-        case 'txt':
-        case 'text':
-          get = $.text;
-          break;
-        case 'htm':
-        case 'html':
-          get = $.htm;
-          break;
-        default:
-          get = $.text;
-      }
-      switch (type) {
-        case 'com':
-        case 'comment':
-          return get(user.com);
-        case 'name':
-          return get(user.name);
-        case 'sub':
-        case 'subject':
-          return get(user.subject);
-        case 'email':
-          return get(user.email);
-        case 'trip':
-        case 'tripcode':
-          return get(user.trip);
-        default:
-          return;
-      }
-    };
     
     function Post(data) {
       var _thread, _thread_end, root, btnHide, stub, post, user, tn_s;
@@ -939,7 +758,7 @@ div.post div.file .fileThumb {\
       
       btnHide = $.elm('a', {
         id: this.ID,
-        class: 'hide-button post-button fa fa-minus-square-o',
+        class: 'hide-button post-button fa',
         href: 'javascript:;'
       }, root);
       $.on(btnHide, 'click', this.hide, this);
@@ -957,23 +776,31 @@ div.post div.file .fileThumb {\
         name: this.ID
       }, post.info);
       $.after($.tn(' '), post.info.del);
-      post.info.subject = $.htm($.elm('span', {
-        class: 'subject'
-      }, post.info), $.set(data.sub, ''));
-      $.after($.tn(' '), post.info.subject);
+      if (data.sub) {
+        post.info.subject = $.htm($.elm('span', {
+          class: 'subject'
+        }, post.info), data.sub);
+        $.after($.tn(' '), post.info.subject);
+      }
       post.info.nameBlock = $.elm('span', {
         class: 'nameBlock'
       }, post.info);
-      post.info.nameBlock.email = $.elm('a', {
-        class: 'email',
-        href: 'mailto:' + $.set(data.email, '')
-      }, post.info.nameBlock);
-      post.info.nameBlock.name = $.htm($.elm('span', {
-        class: 'name'
-      }, (data.email) ? post.info.nameBlock.email : post.info.nameBlock), $.set(data.name, ''));
-      post.info.nameBlock.trip = $.htm($.elm('span', {
-        class: 'trip'
-      }, (data.email) ? post.info.nameBlock.email : post.info.nameBlock), $.set(data.trip, ''));
+      if (data.email) {
+        post.info.nameBlock.email = $.elm('a', {
+          class: 'email',
+          href: 'mailto:' + data.email
+        }, post.info.nameBlock);
+      }
+      if (data.name) {
+        post.info.nameBlock.name = $.htm($.elm('span', {
+          class: 'name'
+        }, (data.email) ? post.info.nameBlock.email : post.info.nameBlock), data.name);
+      }
+      if (data.trip) {
+        post.info.nameBlock.trip = $.htm($.elm('span', {
+          class: 'trip'
+        }, (data.email) ? post.info.nameBlock.email : post.info.nameBlock), data.trip);
+      }
       if (data.capcode) {
         post.info.nameBlock.capcode = $.htm($.elm('span', {
           class: 'capcode'
@@ -1017,7 +844,6 @@ div.post div.file .fileThumb {\
       post.info.backlinkContainer = $.elm('span', {
         class: 'backlink-container'
       }, post.info);
-      //@TODO: Support for more files
       if (data.ext) {
         post.file = $.elm('div', {
           class: 'file'
@@ -1062,7 +888,7 @@ div.post div.file .fileThumb {\
         email: $.set(post.info.nameBlock.email),
         name: $.set(post.info.nameBlock.name),
         trip: $.set(post.info.nameBlock.trip),
-        com: $.set(post.com)
+        com: $.set(data.com)
       };
       this.file = (data.ext) ? {
         md5: data.md5,

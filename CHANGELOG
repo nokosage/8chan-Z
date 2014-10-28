@@ -15,7 +15,7 @@
 - Posts now create all user data, subjects, emails, tripcodes, names, etc.
   - If they would not exist already
 
-0.1.0 - 10/28/2014
+0.1.0 - 10/27/2014
 - Initial implementation (barebones)
 - Removes old native JavaScript and all dependencies
 - Destroys old thread HTML

@@ -399,7 +399,6 @@
     if (modified === true) {
       return a.toGMTString();
     }
-    //Tue, 28 Oct 2014 01:01:55 GMT
     return (month + 1) + '/' + date + '/' + $.substr(year, 2) + '(' + d[day] + ')' + hour + ':' + minute + ':' + second;
   };
   

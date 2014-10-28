@@ -1,3 +1,11 @@
+0.2.1 - 10/28/2014
+- Recoded XHR for better usages
+  - $.xhr is now an object containing last_modified support
+    - 8chan still does not seem to care that If-Last-Modified is being sent, even at last Last-Modified value
+- Removed 100% width on navbuttons
+- API tweaks
+- Removed trailing spaces
+
 0.2.0 - 10/28/2014
 - Added top menu
   - Added anchor buttons

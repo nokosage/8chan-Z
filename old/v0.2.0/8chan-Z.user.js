@@ -6,14 +6,14 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.2.1
+// @version     0.2.0
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /*
-  8chan Z v0.2.1
+  8chan Z v0.2.0
   https://github.com/nokosage/8chan-Z/
 
   Developers:
@@ -37,14 +37,14 @@
     }
     return p.querySelector(s);
   };
-
+  
   $$ = function(s, p) {
     if (!p || p == null) {
       p = d;
     }
     return p.querySelectorAll(s);
   };
-
+  
   $.elm = function (t, a, s) {
     var e = d.createElement(t);
     if (a) {
@@ -57,7 +57,7 @@
     }
     return e;
   };
-
+  
   $.getVal = function(k, v) {
     if (typeof (Storage) !== 'undefined') {
       if (v == null) {
@@ -77,7 +77,7 @@
       return 'storage unavailable';
     }
   };
-
+  
   $.setVal = function(k, v) {
     if (typeof (Storage) !== 'undefined') {
       if (v == null) {
@@ -89,11 +89,11 @@
       return 'storage unavailable';
     }
   };
-
+  
   $.delVal = function(k) {
     return localStorage.removeItem('' + g.NAMESPACE + k);
   };
-
+  
   $.htm = function(s, v) {
     if (v == null) {
       return s.innerHTML;
@@ -102,7 +102,7 @@
     }
     return s;
   };
-
+  
   $.text = function(s, v) {
     if (v == null) {
       return s.textContent;
@@ -111,7 +111,7 @@
     }
     return s;
   };
-
+  
   $$.htm = function(s, v, n) {
     if (v == null) {
       return s.innerHTML;
@@ -126,7 +126,7 @@
     }
     return s;
   };
-
+  
   $.val = function(s, v) {
     if (v == null) {
       return s.value;
@@ -135,7 +135,7 @@
     }
     return s;
   };
-
+  
   $.att = function(s, a, v) {
     if (!v || v == null || v == false) {
       if (v == false) {
@@ -148,7 +148,7 @@
       return s;
     }
   };
-
+  
   $$.att = function(s, a, v, n) {
     if (!v || v == null) {
       if (!n && n != 0 || n == null && n != 0) {
@@ -172,7 +172,7 @@
       return s;
     }
   };
-
+  
   $.css = function(s) {
     var e = d.createElement('style');
     e.type = 'text/css';
@@ -184,7 +184,7 @@
     $('head').appendChild(e);
     return e;
   };
-
+  
   $.event = function(t, i, s) {
     if (i == null) {
       i = {
@@ -195,7 +195,7 @@
     }
     return s.dispatchEvent(new CustomEvent(t, i));
   };
-
+  
   $.exists = function(s) {
     if (s.length > 0) {
       return true;
@@ -203,14 +203,14 @@
       return false;
     }
   };
-
+  
   $.set = function(v, d) {
     if (d == null) {
       return (v) ? v : false;
     }
     return (v) ? v : d;
   };
-
+  
   $.each = function(a, c, e) {
     for (var i = 0; i < a.length; i++) {
       c(a[i], i);
@@ -223,7 +223,7 @@
       }
     }
   };
-
+  
   $.time = function(t, c, l) {
     if (c == false) {
       return clearInterval(t);
@@ -239,64 +239,42 @@
       }
     }
   };
-
-  $.extend = function(object, properties) {
-    var value;
-    for (var key in properties) {
-      value = properties[key];
-      object[key] = value;
+  
+  $.xhr = function(t, u, i, c, p) {
+    if (i != null) {
+      if (t == 'POST') {
+        var xd = new FormData();
+        for (var key in i) {
+          xd.append(key, i[key]);
+        }
+      } else {
+        xd = '?';
+        for (var key in i) {
+          xd += key + '=' + i[key] + '&';
+        }
+        xd = xd.substring(0, (xd.length - 1));
+        u += xd;
+      }
+    }
+    var x = new XMLHttpRequest();
+    x.open(t, u, true);
+    if (p != null) {
+      for (var key in p) {
+        x.setRequestHeader(key, p[key]);
+      }
+    }
+    x.onreadystatechange = function () {
+      if (x.readyState == 4) {
+        return c(x);
+      }
+    }
+    if (t == 'POST' && i != null) {
+      x.send(xd);
+    } else {
+      x.send();
     }
   };
-
-  $.xhr = (function() {
-    var last_modified = {};
-    return function(info, properties) {
-      var type, url, modified_when, input, headers;
-      type = $.set(info.type);
-      url = $.set(info.url);
-      modified_when = $.set(info.modified_when);
-      input = $.set(info.input);
-      headers = $.set(info.headers);
-      if (input != null && input) {
-        if (type == 'POST') {
-          var xd = new FormData();
-          for (var key in input) {
-            xd.append(key, input[key]);
-          }
-        } else {
-          xd = '?';
-          for (var key in input) {
-            xd += key + '=' + input[key] + '&';
-          }
-          xd = xd.substring(0, (xd.length - 1));
-          url += xd;
-        }
-      }
-      var xhr = new XMLHttpRequest();
-      xhr.open(type, url, true);
-      if (modified_when) {
-        if (url in last_modified) {
-          xhr.setRequestHeader('If-Modified-Since', last_modified[url]);
-        }
-        $.on(xhr, 'load', function() {
-          return last_modified[url] = xhr.getResponseHeader('Last-Modified');
-        });
-      }
-      if (headers != null && headers) {
-        for (var key in headers) {
-          xhr.setRequestHeader(key, headers[key]);
-        }
-      }
-      $.extend(xhr, properties);
-      if (type == 'POST' && input != null && input) {
-        xhr.send(xd);
-      } else {
-        xhr.send();
-      }
-      return xhr;
-    };
-  })();
-
+  
   $.JSON = function(s) {
     if (typeof s == 'string') {
       return JSON.parse(s);
@@ -304,35 +282,35 @@
       return JSON.stringify(s);
     }
   };
-
+  
   $.after = function(n, s) {
     return s.parentNode.insertBefore(n, s.nextSibling);
   };
-
+  
   $.before = function(n, s) {
     return s.parentNode.insertBefore(n, s);
   };
-
+  
   $.addClass = function(el, className) {
     return el.classList.add(className);
   };
-
+  
   $.removeClass = function(el, className) {
     return el.classList.remove(className);
   };
-
+  
   $.hasClass = function(el, className) {
     return el.classList.contains(className);
   };
-
+  
   $.tn = function(text) {
     return d.createTextNode(text);
   };
-
+  
   $.add = function(parent, children) {
     return parent.appendChild($.nodes(children));
   };
-
+  
   $.nodes = function(nodes) {
     var frag, node, _i, _len;
     if (!(nodes instanceof Array)) {
@@ -345,18 +323,18 @@
     }
     return frag;
   };
-
+  
   $.on = function(el, type, handler, bind) {
     if (bind == null) {
           return el.addEventListener(type, handler, false);
     }
     return el.addEventListener(type, handler.bind(bind), false);
   };
-
+  
   $.off = function(el, type, handler) {
     return el.removeEventListener(type, handler, false);
   };
-
+  
   $.ready = function(fc) {
     var cb;
     if (d.readyState !== 'loading') {
@@ -369,7 +347,7 @@
     };
     return $.on(d, 'DOMContentLoaded', cb);
   };
-
+  
   $.JSON = function(s) {
     if (typeof s == 'string') {
       return JSON.parse(s);
@@ -377,18 +355,18 @@
       return JSON.stringify(s);
     }
   };
-
+  
   $.destroy = function(s) {
     return s.parentNode.removeChild(s);
   };
-
+  
   $.split = function(s, c, n) {
     if (n != null)
       return s.split(c)[n];
     else
       return s.split(c);
   };
-
+  
   $.substr = function(s, n, k) {
     s = s.toString();
     if (k == null) {
@@ -396,7 +374,7 @@
     }
     return s.substring(n, k);
   };
-
+  
   $.pad = function(s, p) {
     var len;
     s = s.toString();
@@ -405,7 +383,7 @@
     }
     return $.substr(p, 0, p.length - s.length) + s;
   };
-
+  
   $.date = function(t, modified) {
     var a, m, d, month, date, year, day, date, hour, minute, second;
     a = new Date(t * 1000);
@@ -423,7 +401,7 @@
     }
     return (month + 1) + '/' + date + '/' + $.substr(year, 2) + '(' + d[day] + ')' + hour + ':' + minute + ':' + second;
   };
-
+  
   $.bytes = function(s) {
     var k, sizes, i;
     if (s == 0) return '0 Byte';
@@ -432,21 +410,21 @@
     i = Math.floor(Math.log(s) / Math.log(k));
     return (s / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
   };
-
+  
   var Config = {
 
   };
-
+  
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.2.1',
+    VERSION: '0.2.0',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
     board: false,
     threads: []
   };
-
+  
   var API = {
     init: function() {
       window.Z = {
@@ -455,7 +433,7 @@
       };
     }
   };
-
+  
   var CSS = {
     Main: function() {
       Main.css = $.css('\
@@ -471,10 +449,11 @@
   z-index: 100;\
 }\
 .navButtons {\
-    left: calc(50% - 20px);\
-    margin: 0 5px;\
-    position: absolute;\
-    text-align: center;\
+  left: 0;\
+  margin: 0 5px;\
+  position: absolute;\
+  text-align: center;\
+  width: 100%;\
 }\
 .navButtons > a {\
   margin: 0 2px;\
@@ -527,7 +506,7 @@ div.post div.file .fileThumb {\
 }'    );
     }
   };
-
+  
   var Settings = {
     styles: {
       Yotsuba: '/stylesheets/yotsuba.css',
@@ -552,7 +531,6 @@ div.post div.file .fileThumb {\
         rel: 'styleshet'
       }, h);
       Settings.title = (_ref = $('title', h)) ? _ref : false;
-      //Top Menu
       Settings.top_menu = (_ref = $('div.boardlist')) ? _ref : false;
       $.addClass($.att(Settings.top_menu, 'id', 'top_menu'), 'pages');
       Settings.navButtons = $.elm('span', {
@@ -571,7 +549,7 @@ div.post div.file .fileThumb {\
         id: 'top',
         class: 'anchor'
       }), Settings.top_menu);
-      //Bottom Menu
+      
       Settings.bottom_menu = (_ref = $('div.boardlist.bottom')) ? $.att(_ref, 'id', 'bottom_menu') : false;
       Settings.styleChanger = $.elm('span', {
         class: 'stylechanger'
@@ -589,13 +567,14 @@ div.post div.file .fileThumb {\
         id: 'bottom',
         class: 'anchor'
       }, Settings.bottom_menu), Settings.bottom_menu.childNodes[0]);
+      
       $.on(Settings.styleSelector, 'click', Settings.setStyle);
     },
     setStyle: function() {
       Settings.style.href = Settings.styleSelector.value;
     }
   }
-
+  
   var Cleaner = {
     init: function() {
       Cleaner.overrideFunctions();
@@ -630,7 +609,7 @@ div.post div.file .fileThumb {\
       window.init = function(){};
     }
   };
-
+  
   var Threads = {
     threads: {},
     init: function() {
@@ -654,6 +633,7 @@ div.post div.file .fileThumb {\
           _new_posts.push(_ref.no);
         }
       }
+      //console.log(Threads.threads);
       if (_new) {
         $.event(Info.NAMESPACE + 'NewPosts', {
           posts: _new_posts
@@ -663,40 +643,34 @@ div.post div.file .fileThumb {\
       $.event(Info.NAMESPACE + 'ThreadUpdated');
     }
   };
-
+  
   var Sync = {
     sync: {},
     init: function() {
-
+      
     },
     xhrThread: function(thread) {
-      $.xhr({
-        type: 'GET',
-        url: Info.PROTOCOL + '//' + Info.HOST + '/' + Info.board + '/res/' + thread + '.json',
-        modified_when: true,
-        headers: {
-          'Best-Thread': '/b/read'
-        }
-      }, {
-        onload: function(c) {
-          var _i, r;
-          c = (c) ? c.target : { responseText: "{'posts':{}}"};
-          r = $.JSON(c.responseText)['posts'];
-          for (_i = 0; _i < r.length; _i++)
-            Sync.sync[_i] = r[_i];
-          Threads.updateThread(thread);
-        }
-      });
+      var headers = {
+        //'If-Modified-Since': ((Threads.threads[thread]) ? $.date(Threads.threads[thread].last_modified, true) : 0),
+        'Best-Thread': '/b/read'
+      };
+      $.xhr('GET', Info.PROTOCOL + '//' + Info.HOST + '/' + Info.board + '/res/' + thread + '.json', null, function(c) {
+        var _i, r;
+        r = $.JSON(c.responseText)['posts'];
+        for (_i = 0; _i < r.length; _i++)
+          Sync.sync[_i] = r[_i];
+        Threads.updateThread(thread);
+      }, headers);
     }
   };
-
+  
   var Auto_Loader = {
     timeout: 10,
     run: function() {
       Threads.run();
     }
   };
-
+  
   var Timer = {
     time: 1,
     timer: false,
@@ -707,9 +681,9 @@ div.post div.file .fileThumb {\
       if (Timer.time == null) {
         Timer.time = 0;
       }
-
+      
       Timer.check(Auto_Loader.timeout, Auto_Loader.run);
-
+      
       Timer.time++;
     },
     check: function(t, fc) {
@@ -778,14 +752,14 @@ div.post div.file .fileThumb {\
       }
     }
   };
-
+  
   var Reply = {
     form: false,
     init: function() {
       Reply.form = new Post_Form();
     }
   };
-
+  
   var Post_Form = (function() {
     Post_Form.prototype.toString = function() {
       return this.ID;
@@ -793,40 +767,40 @@ div.post div.file .fileThumb {\
     function Post_Form() {
       var root, tbody, _ref;
       this.ID = 'Form';
-
+      
       root = $('[name="post"]');
       tbody = $('tbody', root);
       this.nodes = {
         root: root,
-        name: (_ref = $('[name="name"]', root)) ? _ref.parentNode.parentNode : $.before($.htm($.elm('tr'),
-          '<th>Name<input type="hidden" value="" name="firstname"></th>' +
+        name: (_ref = $('[name="name"]', root)) ? _ref.parentNode.parentNode : $.before($.htm($.elm('tr'), 
+          '<th>Name<input type="hidden" value="" name="firstname"></th>' + 
           '<td><input type="text" autocomplete="off" maxlength="35" size="25" name="name"></td>'
         //<input id="no_country" type="checkbox" name="no_country">
-        //<label for="no_country">Don't show my flag</label>
+        //<label for="no_country">Don't show my flag</label>                                                                                 
         ), tbody.childNodes[0])
       };
     }
-
+    
     return Post_Form;
-
+    
   })();
-
+  
   var Thread = (function() {
     Thread.prototype.toString = function() {
       return this.ID;
     };
-
+    
     function Thread(no) {
       var root;
       this.ID = no;
       this.posts = {};
       this.last_modified = 0;
-
+      
       root = $.after($.elm('div', {
         id: 'thread_' + this.ID,
         class: 'thread'
       }), $('[name="board"]', $('[name="postcontrols"]')));
-
+      
       this.nodes = {
         root: root,
         end: $.elm('hr', {
@@ -834,11 +808,11 @@ div.post div.file .fileThumb {\
         }, root)
       };
     }
-
+    
     return Thread;
-
+    
   })();
-
+  
   var Post = (function() {
     Post.prototype.toString = function() {
       return this.ID;
@@ -947,28 +921,28 @@ div.post div.file .fileThumb {\
           return;
       }
     };
-
+    
     function Post(data) {
       var _thread, _thread_end, root, btnHide, stub, post, user, tn_s;
       this.ID = data.no;
       this.thread = (data.resto) ? data.resto : data.no;
       this.isReply = (data.resto) ? true : false;
       this.stub = false;
-
+      
       _thread = $('#thread_' + this.thread);
       _thread_end = $('#thread_' + this.thread + '_end');
       root = $.before($.elm('div', {
         id: 'p' + this.ID,
         class: (this.isReply) ? 'postContainer replyContainer' : 'postContainer opContainer'
       }, _thread), _thread_end);
-
+      
       btnHide = $.elm('a', {
         id: this.ID,
         class: 'hide-button post-button fa fa-minus-square-o',
         href: 'javascript:;'
       }, root);
       $.on(btnHide, 'click', this.hide, this);
-
+      
       post = $.elm('div', {
         id: 'reply_' + this.ID,
         class: (this.isReply) ? 'post reply' : 'post op'
@@ -1107,11 +1081,11 @@ div.post div.file .fileThumb {\
         stub: false
       };
     }
-
+    
     return Post;
-
+    
   })();
-
+  
   Main.init();
 
 }).call(this);

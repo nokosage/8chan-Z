@@ -1,3 +1,9 @@
+0.2.2 - 10/29/2014
+- Added Menu object
+  - Moved menus from Settings object
+  - Added main menu for future settings menu
+- CSS tweaks
+
 0.2.1 - 10/28/2014
 - Recoded XHR for better usages
   - $.xhr is now an object containing last_modified support

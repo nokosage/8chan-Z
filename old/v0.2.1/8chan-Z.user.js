@@ -6,14 +6,14 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.2.2
+// @version     0.2.1
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /*
-  8chan Z v0.2.2
+  8chan Z v0.2.1
   https://github.com/nokosage/8chan-Z/
 
   Developers:
@@ -439,7 +439,7 @@
 
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.2.2',
+    VERSION: '0.2.1',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
@@ -471,11 +471,10 @@
   z-index: 100;\
 }\
 .navButtons {\
-  display: inline-block;\
-  left: calc(50% - 30px);\
-  margin: 0 5px;\
-  position: absolute;\
-  text-align: center;\
+    left: calc(50% - 20px);\
+    margin: 0 5px;\
+    position: absolute;\
+    text-align: center;\
 }\
 .navButtons > a {\
   margin: 0 2px;\
@@ -539,6 +538,11 @@ div.post div.file .fileThumb {\
     },
     title: false,
     style: false,
+    styleChanger: false,
+    top_menu: false,
+    bottom_menu: false,
+    styleSelector: false,
+    navButtons: false,
     init: function() {
       var _ref;
       Settings.style = (_ref = $('#stylesheet')) ? _ref : $.elm('link', {
@@ -548,73 +552,49 @@ div.post div.file .fileThumb {\
         rel: 'styleshet'
       }, h);
       Settings.title = (_ref = $('title', h)) ? _ref : false;
-      Menu.init();
-    },
-    setStyle: function() {
-      Settings.style.href = Menu.styleSelector.value;
-    }
-  }
-
-  var Menu = {
-    button: false,
-    styleChanger: false,
-    top_menu: false,
-    bottom_menu: false,
-    styleSelector: false,
-    navButtons: false,
-    init: function() {
-      var _ref;
       //Top Menu
-      Menu.top_menu = (_ref = $('div.boardlist')) ? _ref : false;
-      $.addClass($.att(Menu.top_menu, 'id', 'top_menu'), 'pages');
-      Menu.navButtons = $.elm('span', {
+      Settings.top_menu = (_ref = $('div.boardlist')) ? _ref : false;
+      $.addClass($.att(Settings.top_menu, 'id', 'top_menu'), 'pages');
+      Settings.navButtons = $.elm('span', {
         class: 'navButtons'
-      }, Menu.top_menu);
-      $.elm('a', {
-        href: '#top',
-        class: 'fa fa-arrow-up'
-      }, Menu.navButtons);
+      }, Settings.top_menu);
       $.elm('a', {
         href: '#bottom',
         class: 'fa fa-arrow-down'
-      }, Menu.navButtons);
-      $.after($.elm('br'), Menu.top_menu);
+      }, Settings.navButtons);
+      $.elm('a', {
+        href: '#top',
+        class: 'fa fa-arrow-up'
+      }, Settings.navButtons);
+      $.after($.elm('br'), Settings.top_menu);
       $.after($.elm('div', {
         id: 'top',
         class: 'anchor'
-      }), Menu.top_menu);
+      }), Settings.top_menu);
       //Bottom Menu
-      Menu.bottom_menu = (_ref = $('div.boardlist.bottom')) ? $.att(_ref, 'id', 'bottom_menu') : false;
-      Menu.styleChanger = $.elm('span', {
+      Settings.bottom_menu = (_ref = $('div.boardlist.bottom')) ? $.att(_ref, 'id', 'bottom_menu') : false;
+      Settings.styleChanger = $.elm('span', {
         class: 'stylechanger'
-      }, Menu.bottom_menu);
-      $.add(Menu.styleChanger, $.tn('Style: '));
-      Menu.styleSelector = $.elm('select', {
+      }, Settings.bottom_menu);
+      $.add(Settings.styleChanger, $.tn('Style: '));
+      Settings.styleSelector = $.elm('select', {
         id: 'styleSelector'
-      }, Menu.styleChanger);
+      }, Settings.styleChanger);
       for (var key in Settings.styles) {
         $.text($.elm('option', {
           value: Settings.styles[key]
-        }, Menu.styleSelector), key);
+        }, Settings.styleSelector), key);
       }
       $.before($.elm('div', {
         id: 'bottom',
         class: 'anchor'
-      }, Menu.bottom_menu), Menu.bottom_menu.childNodes[0]);
-      $.on(Menu.styleSelector, 'click', Settings.setStyle);
-      //Settings menu
-      Menu.button = $.before($.elm('a', {
-        id: '#8chanZMenuButton',
-        class: 'fa fa-bars',
-        href: 'javascript:;'
-      }, Menu.navButtons), $('[href="#bottom"]', Menu.navButtons));
-      $.before($.tn(' / '), Menu.button);
-      $.after($.tn(' / '), Menu.button);
-      $.time(3000, function() {
-        Menu.navButtons.style.left = 'calc(50% - ' + ((_ref = window.getComputedStyle(Menu.navButtons)) ? (parseInt(_ref.width) + parseInt(_ref.marginLeft) + parseInt(_ref.marginRight)) / 2 : 0) + 'px)';
-      });
+      }, Settings.bottom_menu), Settings.bottom_menu.childNodes[0]);
+      $.on(Settings.styleSelector, 'click', Settings.setStyle);
+    },
+    setStyle: function() {
+      Settings.style.href = Settings.styleSelector.value;
     }
-  };
+  }
 
   var Cleaner = {
     init: function() {

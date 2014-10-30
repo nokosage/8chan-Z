@@ -1,3 +1,14 @@
+0.3.0 - 10/29/2014
+- Object organization
+  - Removed API object
+  - Removed Sync object
+  - Factored XHRs into appropriate objects
+  - Moved appropriate variables into object
+- Z is now a custom object - _8chanZ
+  - Threads are now in Z object, not Threads.threads
+- 8chan works with If-Modified-Since request headers
+  - Saves a lot of bandwidth
+
 0.2.2 - 10/29/2014
 - Added Menu object
   - Moved menus from Settings object
@@ -7,7 +18,7 @@
 0.2.1 - 10/28/2014
 - Recoded XHR for better usages
   - $.xhr is now an object containing last_modified support
-    - 8chan still does not seem to care that If-Last-Modified is being sent, even at last Last-Modified value
+    - 8chan still does not seem to care that If-Modified-Since is being sent, even at last Last-Modified value
 - Removed 100% width on navbuttons
 - API tweaks
 - Removed trailing spaces

@@ -522,11 +522,11 @@ div.post div.file .fileThumb {\
 
   var Settings = {
     styles: {
-      Yotsuba: '/stylesheets/yotsuba.css',
+      'Yotsuba': '/stylesheets/yotsuba.css',
       'Yotsuba-B': '/stylesheets/yotsuba_b.css',
-      Tomorrow: '/stylesheets/tomorrow.css',
-      Photon: '/stylesheets/photon.css',
-      Dark: '/stylesheets/dark.css'
+      'Tomorrow': '/stylesheets/tomorrow.css',
+      'Photon': '/stylesheets/photon.css',
+      'Dark': '/stylesheets/dark.css'
     },
     title: false,
     style: false,
@@ -690,6 +690,7 @@ div.post div.file .fileThumb {\
             responseText: "{'posts':{}}"
           };
           r = $.JSON(c.responseText)['posts'];
+          //console.log(r);
           for (_i = 0; _i < r.length; _i++) {
             Threads.sync[_i] = r[_i];
           }

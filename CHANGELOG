@@ -1,3 +1,7 @@
+0.3.1 - 10/30/2014
+- Testing some new timings
+- TODO: Fix script not running under certain conditions (Greasemonkey?)
+
 0.3.0 - 10/29/2014
 - Object organization
   - Removed API object

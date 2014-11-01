@@ -6,14 +6,14 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.3.1
+// @version     0.3.0
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /*
-  8chan Z v0.3.1
+  8chan Z v0.3.0
   https://github.com/nokosage/8chan-Z/
 
   Developers:
@@ -439,7 +439,7 @@
 
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.3.1',
+    VERSION: '0.3.0',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
@@ -689,10 +689,8 @@ div.post div.file .fileThumb {\
           c = (c) ? c.target : {
             responseText: "{'posts':{}}"
           };
-          if (c.statusText === "Not Modified") {
-            return;
-          }
           r = $.JSON(c.responseText)['posts'];
+          //console.log(r);
           for (_i = 0; _i < r.length; _i++) {
             Threads.sync[_i] = r[_i];
           }
@@ -748,11 +746,11 @@ div.post div.file .fileThumb {\
     },
     ready: function() {
       Settings.init();
+      Reply.init();
       Main.setThreads();
       Cleaner.destroyThreads(Info.threads);
       Threads.init();
       CSS.Main();
-      Reply.init();
       Timer.init();
       $.event(g.NAMESPACE + 'Ready');
     },
@@ -770,26 +768,23 @@ div.post div.file .fileThumb {\
     thread: function() {
       console.log(Info.NAMESPACE + Info.VERSION + ": Initializing View: Thread");
       Cleaner.init();
-      $.time(100, Main.ready);
+      $.time(50, Main.ready);
     },
     setBoard: function() {
       var path, _ref;
-      path = $.split(location.pathname, '/');
+      path = $.split(location.pathname, '/'); 
       Info.board = (_ref = path[1]) ? _ref : false;
-      Info.view = (_ref = $.split(path[2], '.')[0]) === 'thread' || _ref === 'catalog' || _ref === 'res' ? _ref : (Info.board) ? 'index' : 'frontpage';
-      Info.view = (_ref = $.split($.split(location.pathname, '.')[1], '#')[0]) !== 'html' ? 'none' : Info.view;
-      console.log("1");
+      Info.view = (_ref = $.split(path[2], '.', 0)) === 'thread' || _ref === 'catalog' || _ref === 'res' ? _ref : (Info.board) ? 'index' : 'frontpage';
+      Info.view = (_ref = $.split(location.pathname, '.', 1)) !== 'html' ? 'none' : Info.view;
     },
     setThreads: function() {
-      console.log("2");
       if ($('[data-board="'+Info.board+'"]')) {
         $.each($$('[data-board="'+Info.board+'"]'), function(el) {
-          Info.threads.push($.split(el.id, 'thread_')[1]);
+          Info.threads.push($.split(el.id, 'thread_', 1));
         });
       } else {
         return console.error(Info.NAMESPACE + Info.VERSION + ": No threads found.");
       }
-      console.log("2.5");
     }
   };
 
@@ -815,6 +810,8 @@ div.post div.file .fileThumb {\
         name: (_ref = $('[name="name"]', root)) ? _ref.parentNode.parentNode : $.before($.htm($.elm('tr'),
           '<th>Name<input type="hidden" value="" name="firstname"></th>' +
           '<td><input type="text" autocomplete="off" maxlength="35" size="25" name="name"></td>'
+        //<input id="no_country" type="checkbox" name="no_country">
+        //<label for="no_country">Don't show my flag</label>
         ), tbody.childNodes[0])
       };
     }
@@ -1144,10 +1141,8 @@ div.post div.file .fileThumb {\
 
   })();
 
-  console.log(Info.NAMESPACE + Info.VERSION + ": Initializing...");
-
   var Z = new _8chanZ();
 
-  $.time(250, Main.init());
+  Main.init();
 
 }).call(this);

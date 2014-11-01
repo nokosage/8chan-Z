@@ -1,3 +1,12 @@
+0.3.2 - 11/1/2014
+- Cleaned up some code
+- Added backlink functionality to Post prototypes
+  - Backlinks load by default for every post, for now
+  - Functions to add and remove backlinks
+- posts object in API is now Posts for clarity
+  - i.e. Z.Threads[thread_no].Posts[post_no] to access an individual post
+- Moved Initialization Complete log to end of Main.ready for better debugging
+
 0.3.1 - 10/30/2014
 - Testing some new timings
 - TODO: Fix script not running under certain conditions (Greasemonkey?)

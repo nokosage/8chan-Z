@@ -6,14 +6,14 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.3.3
+// @version     0.3.2
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /**
- * 8chan Z v0.3.3
+ * 8chan Z v0.3.2
  * https://github.com/nokosage/8chan-Z/
  *
  * Developers:
@@ -439,7 +439,7 @@
 
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.3.3',
+    VERSION: '0.3.2',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
@@ -687,9 +687,9 @@ div.post div.file .fileThumb {\
         onload: function(c) {
           var _i, r;
           c = (c) ? c.target : {
-            responseText: "{\"posts\":[]}"
+            responseText: "{'posts':{}}"
           };
-          if (c.status === 304) {
+          if (c.statusText === "Not Modified") {
             return;
           }
           r = $.JSON(c.responseText)['posts'];
@@ -746,9 +746,9 @@ div.post div.file .fileThumb {\
       }
     },
     ready: function() {
+      Settings.init();
       Main.setThreads();
       Cleaner.destroyThreads(Info.threads);
-      Settings.init();
       Threads.init();
       CSS.Main();
       Reply.init();
@@ -770,7 +770,7 @@ div.post div.file .fileThumb {\
     thread: function() {
       console.log(Info.NAMESPACE + Info.VERSION + ": Initializing View: Thread");
       Cleaner.init();
-      $.ready(Main.ready);
+      $.time(100, Main.ready);
     },
     setBoard: function() {
       var path, _ref;
@@ -1172,8 +1172,6 @@ div.post div.file .fileThumb {\
     }
 
     function _8chanZ() {
-      console.log(Info.NAMESPACE + Info.VERSION + ": Initializing...");
-
       this.Info = Info;
       this.Settings = Settings;
       this.Threads = {};
@@ -1185,8 +1183,10 @@ div.post div.file .fileThumb {\
 
   })();
 
+  console.log(Info.NAMESPACE + Info.VERSION + ": Initializing...");
+
   var Z = new _8chanZ();
 
-  Main.init();
+  $.time(250, Main.init());
 
 }).call(this);

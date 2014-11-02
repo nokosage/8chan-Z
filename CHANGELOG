@@ -1,3 +1,10 @@
+0.3.3 - 11/2/2014
+- Change timed dependencies to event-based
+  - Hopefully this will work better for loading inconsistencies
+  - TODO: Save previous thread's data for faster reloading
+- Better XHR status handing
+- TODO: Remove Threads object, combine into Thread object
+
 0.3.2 - 11/1/2014
 - Cleaned up some code
 - Added backlink functionality to Post prototypes

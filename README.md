@@ -18,4 +18,4 @@ For Chrome: Tampermonkey
 For Opera: Violentmonkey
 
 <h4>Step 2:</h4>
-<h1><a href="https://github.com/tux3/8chan-X/raw/master/8chan-x.user.js">Install 8chan-Z</a></h1>
+<h1><a href="https://github.com/nokosage/8chan-Z/raw/master/8chan-Z.user.js">Install 8chan-Z</a></h1>

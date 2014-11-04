@@ -1,3 +1,8 @@
+0.3.4 - 11/3/2014
+- Implemented a try-catch for Main.ready
+  - If it fails, then it waits for DOMContentLoaded
+  - Should be faster and event more consistent
+
 0.3.3 - 11/2/2014
 - Change timed dependencies to event-based
   - Hopefully this will work better for loading inconsistencies

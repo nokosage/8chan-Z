@@ -620,7 +620,7 @@ div.post div.file .fileThumb {\
                   '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' +
                   '<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">' +
                   '<meta name="robots" content="noindex">' +
-                  '<link rel="stylesheet" type="text/css" id="stylesheet" href="/stylesheets/tomorrow.css">' +
+                  '<link rel="stylesheet" type="text/css" id="stylesheet" href="/stylesheets/yotsuba.css">' +
                   '<link rel="stylesheet" media="screen" href="/stylesheets/font-awesome/css/font-awesome.min.css">' +
                   '<link rel="stylesheet" href="/static/flags/flags.css">' +
                   '<link rel="stylesheet" type="text/css" href="/js/katex/katex.min.css">' +

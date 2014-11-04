@@ -6,14 +6,14 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.3.5
+// @version     0.3.4
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /**
- * 8chan Z v0.3.5
+ * 8chan Z v0.3.4
  * https://github.com/nokosage/8chan-Z/
  *
  * Developers:
@@ -439,7 +439,7 @@
 
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.3.5',
+    VERSION: '0.3.4',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
@@ -730,6 +730,7 @@ div.post div.file .fileThumb {\
   };
 
   var Main = {
+    tries: 0,
     init: function() {
       Main.setBoard();
       if (Info.view === 'frontpage') {
@@ -757,18 +758,11 @@ div.post div.file .fileThumb {\
         $.event(Info.NAMESPACE + 'Ready');
         console.log(Info.NAMESPACE + Info.VERSION + ": Initialization complete.");
       } catch(Error) {
+        Main.tries++;
         console.log(Info.NAMESPACE + Info.VERSION + ": Initialization failed. Trying again...");
-        $.ready(function() {
-          Main.setThreads();
-          Cleaner.destroyThreads(Info.threads);
-          Settings.init();
-          Threads.init();
-          CSS.Main();
-          Reply.init();
-          Timer.init();
-          $.event(Info.NAMESPACE + 'Ready');
-          console.log(Info.NAMESPACE + Info.VERSION + ": Initialization complete.");
-        });
+        if (Main.tries < 3) {
+          $.ready(Main.ready);
+        }
       }
     },
     frontpage: function() {

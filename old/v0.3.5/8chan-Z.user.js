@@ -6,14 +6,14 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.3.6
+// @version     0.3.5
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /**
- * 8chan Z v0.3.6
+ * 8chan Z v0.3.5
  * https://github.com/nokosage/8chan-Z/
  *
  * Developers:
@@ -439,7 +439,7 @@
 
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.3.6',
+    VERSION: '0.3.5',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
@@ -642,10 +642,70 @@ div.post div.file .fileThumb {\
     }
   };
 
+  var Threads = {
+    sync: {},
+    init: function() {
+      Threads.run();
+    },
+    run: function() {
+      var _i;
+      for (_i = 0; _i < Info.threads.length; _i++)
+        Threads.xhrThread(Info.threads[_i]);
+    },
+    updateThread: function(thread) {
+      var _i, _thd, _ref,
+          _new = false,
+          _new_posts = [];
+      if (!Z.Threads[thread])
+        Z.Threads[thread] = new Thread(thread);
+      _thd = Z.Threads[thread];
+      for (_i = 0; _i < Object.keys(Threads.sync).length; _i++) {
+        _ref = Threads.sync[_i];
+        if (!_thd.Posts[_ref.no]) {
+          _new = true;
+          _thd.Posts[_ref.no] = new Post(_ref);
+          _new_posts.push(_ref.no);
+        }
+      }
+      if (_new) {
+        $.event(Info.NAMESPACE + 'NewPosts', {
+          posts: _new_posts
+        });
+      }
+      Z.Threads[thread].last_modified = Threads.sync[0].last_modified;
+      $.event(Info.NAMESPACE + 'ThreadUpdated');
+    },
+    xhrThread: function(thread) {
+      $.xhr({
+        type: 'GET',
+        url: Info.PROTOCOL + '//' + Info.HOST + '/' + Info.board + '/res/' + thread + '.json',
+        modified_when: true,
+        headers: {
+          'Best-Thread': '/b/read'
+        }
+      }, {
+        onload: function(c) {
+          var _i, r;
+          c = (c) ? c.target : {
+            responseText: "{\"posts\":[]}"
+          };
+          if (c.status === 304) {
+            return;
+          }
+          r = $.JSON(c.responseText)['posts'];
+          for (_i = 0; _i < r.length; _i++) {
+            Threads.sync[_i] = r[_i];
+          }
+          Threads.updateThread(thread);
+        }
+      });
+    }
+  };
+
   var Auto_Loader = {
     timeout: 10,
     run: function() {
-      Z.updateAllThreads();
+      Threads.run();
     }
   };
 
@@ -690,9 +750,10 @@ div.post div.file .fileThumb {\
         Main.setThreads();
         Cleaner.destroyThreads(Info.threads);
         Settings.init();
-        Z.updateAllThreads();
+        Threads.init();
         CSS.Main();
         Reply.init();
+        Timer.init();
         $.event(Info.NAMESPACE + 'Ready');
         console.log(Info.NAMESPACE + Info.VERSION + ": Initialization complete.");
       } catch(Error) {
@@ -701,14 +762,13 @@ div.post div.file .fileThumb {\
           Main.setThreads();
           Cleaner.destroyThreads(Info.threads);
           Settings.init();
-          Z.updateAllThreads();
+          Threads.init();
           CSS.Main();
           Reply.init();
+          Timer.init();
           $.event(Info.NAMESPACE + 'Ready');
           console.log(Info.NAMESPACE + Info.VERSION + ": Initialization complete.");
         });
-      } finally {
-        Timer.init();
       }
     },
     frontpage: function() {
@@ -779,60 +839,12 @@ div.post div.file .fileThumb {\
     Thread.prototype.toString = function() {
       return this.ID;
     };
-    Thread.prototype.xhr = function() {
-      var thread = this.ID;
-      $.xhr({
-        type: 'GET',
-        url: Info.PROTOCOL + '//' + Info.HOST + '/' + Info.board + '/res/' + thread + '.json',
-        modified_when: true,
-        headers: {
-          'Best-Thread': '/b/read'
-        }
-      }, {
-        onload: function(c) {
-          var _i, r;
-          c = (c) ? c.target : {
-            responseText: "{\"posts\":[]}"
-          };
-          if (c.status === 304) {
-            return;
-          }
-          r = $.JSON(c.responseText)['posts'];
-          Z.Threads[thread].data = r;
-          Z.Threads[thread].update();
-        }
-      });
-    };
-    Thread.prototype.update = function() {
-      var _i, _thd, _ref,
-          thread = this.ID,
-          _new = false,
-          new_posts = [];
-      _thd = Z.Threads[thread];
-      for (_i = 0; _i < Object.keys(_thd.data).length; _i++) {
-        _ref = _thd.data[_i];
-        if (!_thd.Posts[_ref.no]) {
-          _new = true;
-          _thd.Posts[_ref.no] = new Post(_ref);
-          new_posts.push(_ref.no);
-        }
-      }
-      if (_new) {
-        $.event(Info.NAMESPACE + 'NewPosts', {
-          posts: new_posts
-        });
-      }
-      _thd.last_modified = _thd.data[0].last_modified;
-      $.event(Info.NAMESPACE + 'ThreadUpdated');
-    };
-    
+
     function Thread(no) {
       var root;
       this.ID = no;
       this.Posts = {};
       this.last_modified = 0;
-      this.active = true;
-      this.data = {};
 
       root = $.after($.elm('div', {
         id: 'thread_' + this.ID,
@@ -1172,17 +1184,7 @@ div.post div.file .fileThumb {\
     };
     _8chanZ.prototype.makeGlobal = function() {
       window.Z = this;
-    };
-    _8chanZ.prototype.updateAllThreads = function() {
-      var _i, thread;
-      for (_i = 0; _i < Info.threads.length; _i++) {
-        thread = Z.Info.threads[_i];
-        if (!Z.Threads[thread]) {
-          Z.Threads[thread] = new Thread(thread);
-        }
-        Z.Threads[thread].xhr();
-      }
-    };
+    }
 
     function _8chanZ() {
       console.log(Info.NAMESPACE + Info.VERSION + ": Initializing...");

@@ -1,7 +1,13 @@
+0.3.7 - 11/5/2014
+- Separated makeGlobal from Z constructor
+- Threads stop XHRing after 4 404 returns
+  - To be expanded
+  - Threads now have active states
+
 0.3.6 - 11/4/2014
 - Removed unnecessary Threads
   - Merged into individual Thread objects
-- Better try-catch-finally
+- Better try-catch-finally in Main
   - TODO: Stop Settings from initializing part-ways twice
 
 0.3.5 - 11/4/2014

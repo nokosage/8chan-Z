@@ -781,9 +781,6 @@ div.post div.file .fileThumb {\
     };
     Thread.prototype.xhr = function() {
       var thread = this.ID;
-      if (this.active === false || this.xhring === true) {
-        return;
-      }
       $.xhr({
         type: 'GET',
         url: Info.PROTOCOL + '//' + Info.HOST + '/' + Info.board + '/res/' + thread + '.json',
@@ -792,37 +789,17 @@ div.post div.file .fileThumb {\
           'Best-Thread': '/b/read'
         }
       }, {
-        timeout: 30000,
-        onreadystatechange: function(c) {
-          var _t, _thd;
-          _t = c.target;
-          _thd = Z.Threads[thread];
-          if (_t.readyState == 3) {
-            _thd.xhring = true;
-          }
-          if (_t.readyState == 4) {
-            if (_t.status === 404) {
-              //if (_thd.xhr_tries > 3) {
-              //  _thd.active = false;
-              //}
-              //_thd.xhr_tries = 1;
-              //console.log(_t);
-            }
-          }
-        },
         onload: function(c) {
-          var _i, _r, _thd, _t;
-          _thd = Z.Threads[thread];
-          _thd.xhr_tries = 0;
-          _thd.xhring = false;
-          _t = c.target;
-          if (_t.status === 304) {
+          var _i, r;
+          c = (c) ? c.target : {
+            responseText: "{\"posts\":[]}"
+          };
+          if (c.status === 304) {
             return;
           }
-          _r = $.JSON(_t.responseText)['posts'];
-          _thd.data = _r;
-          _thd.update();
-          _thd.ID = 1;
+          r = $.JSON(c.responseText)['posts'];
+          Z.Threads[thread].data = r;
+          Z.Threads[thread].update();
         }
       });
     };
@@ -856,8 +833,6 @@ div.post div.file .fileThumb {\
       this.last_modified = 0;
       this.active = true;
       this.data = {};
-      this.xhr_tries = 0;
-      this.xhring = false;
 
       root = $.after($.elm('div', {
         id: 'thread_' + this.ID,
@@ -1215,6 +1190,8 @@ div.post div.file .fileThumb {\
       this.Info = Info;
       this.Settings = Settings;
       this.Threads = {};
+
+      this.makeGlobal();
     }
 
     return _8chanZ;
@@ -1222,7 +1199,6 @@ div.post div.file .fileThumb {\
   })();
 
   var Z = new _8chanZ();
-  Z.makeGlobal();
 
   Main.init();
 

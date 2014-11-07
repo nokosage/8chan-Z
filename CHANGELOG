@@ -1,3 +1,7 @@
+0.3.9 - 11/6/2014
+- Changed order of stub and show buttons
+- Made Post wrapping CSS match more like 4chan's
+
 0.3.8 - 11/6/2014
 - Fixed an inconvenience when a reply wraps under an OP and the hide button appears next to the OP instead
 

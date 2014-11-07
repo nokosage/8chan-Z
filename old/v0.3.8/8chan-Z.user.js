@@ -6,14 +6,14 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.3.9
+// @version     0.3.8
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /**
- * 8chan Z v0.3.9
+ * 8chan Z v0.3.8
  * https://github.com/nokosage/8chan-Z/
  *
  * Developers:
@@ -439,7 +439,7 @@
 
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.3.9',
+    VERSION: '0.3.8',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
@@ -479,30 +479,27 @@
   float: right;\
   font-weight: bold;\
 }\
-.opContainer {\
-  display: inline;\
-}\
 .postContainer {\
-  display: block;\
+  display: table;\
   position: relative;\
+  width: 100%;\
 }\
 .post-button {\
   float: left;\
-  left: -5px;\
-  position: relative;\
+  margin: 4px 0 0 -4px;\
+  position: absolute;\
   top: 0;\
   text-decoration: none;\
 }\
 .stub {\
   margin-bottom: -7px;\
-  margin-left: 19px;\
-  margin-top: -4px;\
+  margin-left: 18px;\
+  margin-top: -7px;\
 }\
 .hide {\
   display: none !important;\
 }\
 div.post.reply {\
-  display: table;\
   margin-left: 10px;\
 }\
 .classNum a, .menu-button {\
@@ -901,7 +898,6 @@ div.post div.file .fileThumb {\
         class: 'show-button post-button fa fa-plus-square-o',
         href: 'javascript:;'
       }, root);
-      $.before(btnShow, stub);
       $.on(btnShow, 'click', this.show, this);
       $.addClass(post, 'hide');
       $.addClass(btnHide, 'hide');

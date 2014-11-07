@@ -6,14 +6,14 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.3.8
+// @version     0.3.7
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /**
- * 8chan Z v0.3.8
+ * 8chan Z v0.3.7
  * https://github.com/nokosage/8chan-Z/
  *
  * Developers:
@@ -439,7 +439,7 @@
 
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.3.8',
+    VERSION: '0.3.7',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
@@ -476,13 +476,11 @@
   font-size: 14px;\
 }\
 .stylechanger {\
-  float: right;\
-  font-weight: bold;\
+    float: right;\
+    font-weight: bold;\
 }\
 .postContainer {\
-  display: table;\
-  position: relative;\
-  width: 100%;\
+    position: relative;\
 }\
 .post-button {\
   float: left;\
@@ -837,7 +835,6 @@ div.post div.file .fileThumb {\
         if (!_thd.Posts[_ref.no]) {
           _new = true;
           _thd.Posts[_ref.no] = new Post(_ref);
-          _thd.Posts[_ref.no].insertPostIntoThread();
           new_posts.push(_ref.no);
         }
       }
@@ -1004,7 +1001,6 @@ div.post div.file .fileThumb {\
         class: 'backlink',
         href: '/' + Info.board + '/res/' + thread + '.html#p' + no
       }, this.nodes.post.info.backlinkContainer), '>>' + no);
-      $.before($.tn(' '), backlink);
       this.backlinks[no] = backlink;
       return backlink;
     };
@@ -1021,25 +1017,8 @@ div.post div.file .fileThumb {\
     Post.prototype.destroyBacklink = function(no) {
       var _ref;
       if (_ref = this.backlinks[no]) {
-        $.destroy(_ref.previousSibling);
         $.destroy(_ref);
       }
-    };
-    Post.prototype.setQuotePreviews = function() {
-      var links, no, _ref;
-      links = $$('a', this.user.com);
-      for (var _i = 0; _i < links.length; _i++) {
-        no = (_ref = $.split($.text(links[_i]), '>>')[1]) ? _ref : false;
-        if (no && (_ref = Z.Threads[this.thread].Posts[no])) {
-          _ref.createBacklink(this.thread, this.ID);
-        }
-      }
-    };
-    
-    Post.prototype.insertPostIntoThread = function() {
-      var _thread_end;
-      _thread_end = $('#thread_' + this.thread + '_end');
-      $.before(this.nodes.root, _thread_end);
     };
 
     function Post(data) {
@@ -1053,10 +1032,10 @@ div.post div.file .fileThumb {\
 
       _thread = $('#thread_' + this.thread);
       _thread_end = $('#thread_' + this.thread + '_end');
-      root = $.elm('div', {
+      root = $.before($.elm('div', {
         id: 'p' + this.ID,
         class: (this.isReply) ? 'postContainer replyContainer' : 'postContainer opContainer'
-      }, _thread);
+      }, _thread), _thread_end);
 
       btnHide = $.elm('a', {
         id: this.ID,

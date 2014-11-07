@@ -1,3 +1,6 @@
+0.3.8 - 11/6/2014
+- Fixed an inconvenience when a reply wraps under an OP and the hide button appears next to the OP instead
+
 0.3.7 - 11/5/2014
 - Separated makeGlobal from Z constructor
 - Threads stop XHRing after 4 404 returns

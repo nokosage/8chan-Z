@@ -6,14 +6,14 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.4.0
+// @version     0.3.10
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /**
- * 8chan Z v0.4.0
+ * 8chan Z v0.3.10
  * https://github.com/nokosage/8chan-Z/
  *
  * Developers:
@@ -439,7 +439,7 @@
 
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.4.0',
+    VERSION: '0.3.10',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
@@ -1011,33 +1011,7 @@ div.post div.file .fileThumb {\
       }, this.nodes.post.info.backlinkContainer), '>>' + no);
       $.before($.tn(' '), backlink);
       this.backlinks[no] = backlink;
-      
-      this.setQuotePreview(backlink, thread, no);
-      this.setQuoteInline(backlink, this.thread, no, backlink.parentNode);
-      
       return backlink;
-    };
-    Post.prototype.prepareQuoteLinks = function() {
-      var links, no, _ref;
-      links = $$('a', this.user.com);
-      for (var _i = 0; _i < links.length; _i++) {
-        no = (_ref = $.split($.text(links[_i]), '>>')[1]) ? _ref : false;
-        if (no && (_ref = Z.Threads[this.thread].Posts[no])) {
-          this.setQuotePreview(links[_i], this.thread, no);
-          this.setQuoteInline(links[_i], this.thread, no, links[_i]);
-        }
-      }
-    };
-    Post.prototype.prepareQuoteBacklinks = function() {
-      var links, no, _ref;
-      links = $$('a', this.nodes.post.info.backlinkContainer);
-      for (var _i = 0; _i < links.length; _i++) {
-        no = (_ref = $.split($.text(links[_i]), '>>')[1]) ? _ref : false;
-        if (no && (_ref = Z.Threads[this.thread].Posts[no])) {
-          this.setQuotePreview(links[_i], thread, no);
-          this.setQuoteInline(links[_i], this.thread, no, links[_i].parentNode);
-        }
-      }
     };
     Post.prototype.destroyBacklinks = function() {
       var links, no, _ref;
@@ -1056,44 +1030,15 @@ div.post div.file .fileThumb {\
         $.destroy(_ref);
       }
     };
-    Post.prototype.setQuotePreview = function(link, thread, no) {
-      $.on(link, 'mouseover', function(e) {
-        var el, _node;
-        _node = Z.Threads[thread].Posts[no].nodes.post;
-        el = $.htm($.elm('div', {
-          id: 'quote_preview',
-          style: 'position: fixed; z-index: 200; left: ' + e.screenX + 'px; top: ' + e.screenY + 'px;'
-        }, document.body), _node.outerHTML);
-        $.att(el.childNodes[0], 'style', 'border: 1px solid;');
-        $.on(link, 'mousemove', function(e) {
-          el.style.left = e.screenX + 25 + 'px';
-          el.style.top = e.screenY - (parseInt(window.getComputedStyle(_node).height) * 5 / 4) + 'px';
-        });
-        $.on(link, 'mouseout', function() {
-          $.destroy(el);
-        });
-      });
-    };
-    Post.prototype.setQuoteInline = function(link, thread, no, after) {
-      var el, _ref;
-      $.on(link, 'click', function(e) {
-        el = (_ref = $('#quote_preview')) ? _ref : false;
-        if (el) {
-          e.preventDefault();
-          if ($.hasClass(link, 'inlined')) {
-            $.destroy($('#inlined_' + no));
-            $.removeClass(link, 'inlined');
-          } else {
-            $.after($.htm($.elm('div', {
-              id: 'inlined_' + no,
-              class: Info.NAMESPACE + 'quote_inline'
-            }), el.innerHTML), after);
-            //Z.Threads[thread].Posts[no].prepareQuoteLinks();
-            //Z.Threads[thread].Posts[no].prepareQuoteBacklinks();
-            $.addClass(link, 'inlined');
-          }
+    Post.prototype.setQuotePreviews = function() {
+      var links, no, _ref;
+      links = $$('a', this.user.com);
+      for (var _i = 0; _i < links.length; _i++) {
+        no = (_ref = $.split($.text(links[_i]), '>>')[1]) ? _ref : false;
+        if (no && (_ref = Z.Threads[this.thread].Posts[no])) {
+          _ref.createBacklink(this.thread, this.ID);
         }
-      });
+      }
     };
     
     Post.prototype.insertPostIntoThread = function() {
@@ -1264,8 +1209,6 @@ div.post div.file .fileThumb {\
       };
 
       this.createBacklinks();
-      this.prepareQuoteLinks();
-      //this.prepareQuoteBacklinks();
     }
 
     return Post;

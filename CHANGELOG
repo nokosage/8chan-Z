@@ -1,3 +1,6 @@
+0.3.10 - 11/7/2014
+- Fixed the thread from xhring forever
+
 0.3.9 - 11/6/2014
 - Changed order of stub and show buttons
 - Made Post wrapping CSS match more like 4chan's

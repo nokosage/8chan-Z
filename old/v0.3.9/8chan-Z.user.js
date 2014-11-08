@@ -6,14 +6,14 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.3.10
+// @version     0.3.9
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /**
- * 8chan Z v0.3.10
+ * 8chan Z v0.3.9
  * https://github.com/nokosage/8chan-Z/
  *
  * Developers:
@@ -439,7 +439,7 @@
 
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.3.10',
+    VERSION: '0.3.9',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
@@ -806,7 +806,6 @@ div.post div.file .fileThumb {\
             _thd.xhring = true;
           }
           if (_t.readyState == 4) {
-            _thd.xhring = false;
             if (_t.status === 404) {
               if (_thd.xhr_tries > 3) {
                 _thd.active = false;

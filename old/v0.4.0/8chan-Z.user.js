@@ -6,14 +6,14 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.4.1
+// @version     0.4.0
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /**
- * 8chan Z v0.4.1
+ * 8chan Z v0.4.0
  * https://github.com/nokosage/8chan-Z/
  *
  * Developers:
@@ -439,7 +439,7 @@
 
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.4.1',
+    VERSION: '0.4.0',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
@@ -511,11 +511,6 @@ div.post.reply {\
 }\
 .menu-button:before {\
   content: "";\
-}\
-.quote_inline {\
-  background: none repeat scroll 0 0 rgba(255, 255, 255, 0.07);\
-  border: 1px solid;\
-  display: table;\
 }\
 div.post div.file .fileThumb {\
   float: left;\
@@ -649,7 +644,6 @@ div.post div.file .fileThumb {\
       window.ready = function(){};
       window.onready = function(){};
       window.init = function(){};
-      window.highlightReply = function(no){};
     }
   };
 
@@ -736,7 +730,7 @@ div.post div.file .fileThumb {\
     thread: function() {
       console.log(Info.NAMESPACE + Info.VERSION + ": Initializing View: Thread");
       Cleaner.init();
-      $.time(1000, Main.ready);
+      $.time(100, Main.ready);
     },
     setBoard: function() {
       var path, _ref;
@@ -1012,7 +1006,7 @@ div.post div.file .fileThumb {\
         return;
       }
       backlink = $.text($.elm('a', {
-        class: 'backlink backlink_prepared',
+        class: 'backlink',
         href: '/' + Info.board + '/res/' + thread + '.html#p' + no
       }, this.nodes.post.info.backlinkContainer), '>>' + no);
       $.before($.tn(' '), backlink);
@@ -1025,28 +1019,23 @@ div.post div.file .fileThumb {\
     };
     Post.prototype.prepareQuoteLinks = function() {
       var links, no, _ref;
-      links = $$('blockquote > a', this.nodes.post);
+      links = $$('a', this.user.com);
       for (var _i = 0; _i < links.length; _i++) {
         no = (_ref = $.split($.text(links[_i]), '>>')[1]) ? _ref : false;
-        if (no && no != this.ID && !$.hasClass(links[_i], 'link_prepared')) {
+        if (no && (_ref = Z.Threads[this.thread].Posts[no])) {
           this.setQuotePreview(links[_i], this.thread, no);
           this.setQuoteInline(links[_i], this.thread, no, links[_i]);
-          $.addClass(links[_i], 'link_prepared');
         }
       }
     };
     Post.prototype.prepareQuoteBacklinks = function() {
-      var links, no, _ref, backlinkContainers;
-      backlinkContainers = $$('.backlink-container', this.nodes.post);
-      for (var _j = 0; _j < backlinkContainers.length; _j++) {
-        links = $$('a', backlinkContainers[_j]);
-        for (var _i = 0; _i < links.length; _i++) {
-          no = (_ref = $.split($.text(links[_i]), '>>')[1]) ? _ref : false;
-          if (no && no != this.ID && !$.hasClass(links[_i], 'backlink_prepared')) {
-            this.setQuotePreview(links[_i], this.thread, no);
-            this.setQuoteInline(links[_i], this.thread, no, links[_i].parentNode);
-            $.addClass(links[_i], 'backlink_prepared');
-          }
+      var links, no, _ref;
+      links = $$('a', this.nodes.post.info.backlinkContainer);
+      for (var _i = 0; _i < links.length; _i++) {
+        no = (_ref = $.split($.text(links[_i]), '>>')[1]) ? _ref : false;
+        if (no && (_ref = Z.Threads[this.thread].Posts[no])) {
+          this.setQuotePreview(links[_i], thread, no);
+          this.setQuoteInline(links[_i], this.thread, no, links[_i].parentNode);
         }
       }
     };
@@ -1070,57 +1059,41 @@ div.post div.file .fileThumb {\
     Post.prototype.setQuotePreview = function(link, thread, no) {
       $.on(link, 'mouseover', function(e) {
         var el, _node;
-        if (!$.hasClass(link, 'inlined')) {
-          _node = Z.Threads[thread].Posts[no].nodes.post;
-          el = $.htm($.elm('div', {
-            id: 'quote_preview',
-            style: 'position: fixed; z-index: 200; left: ' + e.clientX + 'px; top: ' + e.clientY + 'px;'
-          }, document.body), _node.outerHTML);
-          $.att($.att(el.childNodes[0], 'style', 'border: 1px solid;'), 'class', 'post reply');
-          $.on(link, 'mousemove', function(e) {
-            var _ref, _ref2;
-            el.style.left = (((_ref = e.clientX) <= window.innerWidth / 2) ? _ref + 25 : _ref - parseInt(window.getComputedStyle(_node).width) - 50) + 'px';
-            el.style.top = (((_ref2 = (((_ref = e.clientY - (parseInt(window.getComputedStyle(_node).height))) >= 0) ? _ref : 0)) + parseInt(window.getComputedStyle(_node).height) + 50 <= window.innerHeight) ? _ref2 : window.innerHeight - parseInt(window.getComputedStyle(_node).height) - 50) + 'px';
-          });
-          $.on(link, 'mouseout', function() {
-            $.destroy(el);
-          });
-        }
+        _node = Z.Threads[thread].Posts[no].nodes.post;
+        el = $.htm($.elm('div', {
+          id: 'quote_preview',
+          style: 'position: fixed; z-index: 200; left: ' + e.screenX + 'px; top: ' + e.screenY + 'px;'
+        }, document.body), _node.outerHTML);
+        $.att(el.childNodes[0], 'style', 'border: 1px solid;');
+        $.on(link, 'mousemove', function(e) {
+          el.style.left = e.screenX + 25 + 'px';
+          el.style.top = e.screenY - (parseInt(window.getComputedStyle(_node).height) * 5 / 4) + 'px';
+        });
+        $.on(link, 'mouseout', function() {
+          $.destroy(el);
+        });
       });
     };
     Post.prototype.setQuoteInline = function(link, thread, no, after) {
+      var el, _ref;
       $.on(link, 'click', function(e) {
-        var el, _ref, _node, links, backlinks;
-        e.preventDefault();
-        if ($.hasClass(link, 'inlined')) {
-          $.destroy($('#inlined_' + no, this.nodes.post));
-          $.removeClass(link, 'inlined');
-        } else {
-          el = (_ref = Z.Threads[thread].Posts[no].nodes.post) ? _ref : false;
-          if (el) {
-            _node = $.after($.htm($.elm('div', {
+        el = (_ref = $('#quote_preview')) ? _ref : false;
+        if (el) {
+          e.preventDefault();
+          if ($.hasClass(link, 'inlined')) {
+            $.destroy($('#inlined_' + no));
+            $.removeClass(link, 'inlined');
+          } else {
+            $.after($.htm($.elm('div', {
               id: 'inlined_' + no,
-              class: 'quote_inline'
+              class: Info.NAMESPACE + 'quote_inline'
             }), el.innerHTML), after);
-            $.addClass(_node.childNodes[0], 'quote_inlined');
-            $.removeClass(_node.childNodes[0], 'reply');
-
-            backlinks = $$('.backlink_prepared', _node);
-            for (var _i = 0; _i < backlinks.length; _i++) {
-              $.removeClass(backlinks[_i], 'backlink_prepared');
-            }
-            var links = $$('.link_prepared', _node);
-            for (var _i = 0; _i < links.length; _i++) {
-              $.removeClass(links[_i], 'link_prepared');
-            }
-            this.prepareQuoteLinks();
-            this.prepareQuoteBacklinks();
-
+            //Z.Threads[thread].Posts[no].prepareQuoteLinks();
+            //Z.Threads[thread].Posts[no].prepareQuoteBacklinks();
             $.addClass(link, 'inlined');
-            if (_ref = $('#quote_preview')) $.destroy(_ref);
           }
         }
-      }, this);
+      });
     };
     
     Post.prototype.insertPostIntoThread = function() {

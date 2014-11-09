@@ -1,3 +1,9 @@
+0.4.1 - 11/8/2014
+- Expanded previewing and inline functionality to inlined posts
+  - TODO: A few glitches still
+- Tweaked initialization times
+- Remove highlightReply error from logging
+
 0.4.0 - 11/8/2014
 - First implementation of quote previewing and inlining
   - Still needs a lot of work

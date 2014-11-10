@@ -466,7 +466,6 @@
   margin: 0 auto;\
   position: relative;\
   text-align: center;\
-  white-space: nowrap;\
   width: 75px;\
 }\
 .navButtons > a {\

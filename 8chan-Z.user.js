@@ -585,8 +585,8 @@ div.post div.file .fileThumb {\
         id: 'nativeMenu',
         class: 'hide'
       }, Menu.topLeft);
-      for (var c = 0; $('.sub[data-description="'+c+'"]', db); c++){
-        $.add(Menu.nativeMenu, $('.sub[data-description="'+c+'"]', db));
+      for (var c = 0; (_ref = $('[data-description="'+c+'"]', Menu.top_menu)); c++){
+        $.add(Menu.nativeMenu, _ref);
       }
       $.add(Menu.nativeMenu, $.tn(' / '));
       Menu.hideTopLeftMenu = $.elm('a', {

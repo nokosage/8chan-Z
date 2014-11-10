@@ -6,14 +6,14 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.4.3
+// @version     0.4.2
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /**
- * 8chan Z v0.4.3
+ * 8chan Z v0.4.2
  * https://github.com/nokosage/8chan-Z/
  *
  * Developers:
@@ -439,7 +439,7 @@
 
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.4.3',
+    VERSION: '0.4.2',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
@@ -451,7 +451,7 @@
     Main: function() {
       Main.css = $.css('\
 #top_menu {\
-  box-shadow: 0 7px 4px -4px rgba(0, 0, 0, 0.25);\
+  box-shadow: 0 7px 4px -4px rgba(0, 0, 0, 0.5);\
   left: 0;\
   line-height: 1.6;\
   margin: -1px 0 0 -5px;\
@@ -459,7 +459,7 @@
   position: fixed;\
   top: 0;\
   width: 100%;\
-  z-index: 10;\
+  z-index: 100;\
 }\
 .navButtons {\
   display: block;\
@@ -509,9 +509,8 @@ div.post.reply {\
   margin: 0 !important;\
   text-decoration: none;\
 }\
-#top_left_menu {\
+#nativeMenu {\
   float: left;\
-  margin: 0 5px;\
 }\
 .menu-button:before {\
   content: "";\
@@ -574,52 +573,12 @@ div.post div.file .fileThumb {\
       //Top Menu
       Menu.top_menu = (_ref = $('div.boardlist')) ? _ref : false;
       $.addClass($.att(Menu.top_menu, 'id', 'top_menu'), 'pages');
-      Menu.topLeft = $.elm('span', {
-        id: 'top_left_menu'
-      }, Menu.top_menu);
-      Menu.topVersion = $.text($.elm('span', {
-        style: 'font-weight: bold;'
-      }, Menu.topLeft), Info.NAMESPACE + Info.VERSION + " / ");
-      $.add(Menu.topLeft, $.tn('[ '));
       Menu.nativeMenu = $.elm('span', {
-        id: 'nativeMenu',
-        class: 'hide'
-      }, Menu.topLeft);
+        id: 'nativeMenu'
+      }, Menu.top_menu);
       for (var c = 0; $('.sub[data-description="'+c+'"]', db); c++){
         $.add(Menu.nativeMenu, $('.sub[data-description="'+c+'"]', db));
       }
-      $.add(Menu.nativeMenu, $.tn(' / '));
-      Menu.hideTopLeftMenu = $.elm('a', {
-        class: 'fa fa-minus',
-        style: 'font-size: 9pt;',
-        href: 'javascript:;'
-      }, Menu.nativeMenu);
-      $.on(Menu.hideTopLeftMenu, 'click', function() {
-        $.addClass(Menu.nativeMenu, 'hide');
-        $.removeClass(Menu.backTos, 'hide');
-        $.removeClass(Menu.showTopLeftMenu, 'hide');
-      });
-      Menu.backTos = $.elm('span', {}, Menu.topLeft);
-      Menu.backToBoard = $.text($.elm('a', {
-        href: Info.PROTOCOL + '//8chan.co/' + Info.board + '/'
-      }, Menu.backTos), Info.board);
-      $.after($.tn(' / '), Menu.backToBoard);
-      Menu.backToCatalog = $.text($.elm('a', {
-        href: Info.PROTOCOL + '//8chan.co/' + Info.board + '/catalog.html'
-      }, Menu.backTos), 'catalog');
-      $.after($.tn(' / '), Menu.backToCatalog);
-      Menu.showTopLeftMenu = $.elm('a', {
-        class: 'fa fa-plus',
-        style: 'font-size: 9pt;',
-        href: 'javascript:;'
-      }, Menu.topLeft);
-      $.on(Menu.showTopLeftMenu, 'click', function() {
-        $.removeClass(Menu.nativeMenu, 'hide');
-        $.addClass(Menu.backTos, 'hide');
-        $.addClass(Menu.showTopLeftMenu, 'hide');
-      });
-      $.add(Menu.topLeft, $.tn(' ]'));
-      
       Menu.navButtons = $.elm('span', {
         class: 'navButtons'
       }, Menu.top_menu);
@@ -1132,8 +1091,8 @@ div.post div.file .fileThumb {\
           $.att($.att(el.childNodes[0], 'style', 'border: 1px solid;'), 'class', 'post reply');
           $.on(link, 'mousemove', function(e) {
             var _ref, _ref2;
-            el.style.left = (((_ref2 = (((_ref = e.clientX) <= window.innerWidth / 2) ? _ref + 25 : _ref - parseInt(window.getComputedStyle(_node).width) - 50)) >= 0) ? _ref2 : 0) + 'px';
-            el.style.top = (((_ref2 = (((_ref = e.clientY - (parseInt(window.getComputedStyle(_node).height)) - 25) >= 0) ? _ref : 0)) + parseInt(window.getComputedStyle(_node).height) + 50 <= window.innerHeight) ? _ref2 : window.innerHeight - parseInt(window.getComputedStyle(_node).height) - 50) + 'px';
+            el.style.left = (((_ref = e.clientX) <= window.innerWidth / 2) ? _ref + 25 : _ref - parseInt(window.getComputedStyle(_node).width) - 50) + 'px';
+            el.style.top = (((_ref2 = (((_ref = e.clientY - (parseInt(window.getComputedStyle(_node).height))) >= 0) ? _ref : 0)) + parseInt(window.getComputedStyle(_node).height) + 50 <= window.innerHeight) ? _ref2 : window.innerHeight - parseInt(window.getComputedStyle(_node).height) - 50) + 'px';
           });
           $.on(link, 'mouseout', function() {
             $.destroy(el);

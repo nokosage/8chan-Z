@@ -6,14 +6,14 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.4.3
+// @version     0.4.4
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /**
- * 8chan Z v0.4.3
+ * 8chan Z v0.4.4
  * https://github.com/nokosage/8chan-Z/
  *
  * Developers:
@@ -439,7 +439,7 @@
 
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.4.3',
+    VERSION: '0.4.4',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
@@ -666,6 +666,7 @@ div.post div.file .fileThumb {\
       }, Menu.navButtons), $('[href="#bottom"]', Menu.navButtons));
       $.before($.tn(' / '), Menu.button);
       $.after($.tn(' / '), Menu.button);
+      if (_ref = $('#watchlist-toggle')) $.destroy(_ref.parentNode);
       Menu.initialized = true;
     }
   };
@@ -753,7 +754,6 @@ div.post div.file .fileThumb {\
       try {
         Main.setThreads();
         Cleaner.destroyThreads(Info.threads);
-        Settings.init();
         Z.updateAllThreads();
         CSS.Main();
         Reply.init();
@@ -764,7 +764,6 @@ div.post div.file .fileThumb {\
         $.ready(function() {
           Main.setThreads();
           Cleaner.destroyThreads(Info.threads);
-          Settings.init();
           Z.updateAllThreads();
           CSS.Main();
           Reply.init();
@@ -773,6 +772,7 @@ div.post div.file .fileThumb {\
         });
       } finally {
         Timer.init();
+        $.ready(Settings.init);
       }
     },
     frontpage: function() {

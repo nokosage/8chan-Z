@@ -6,14 +6,14 @@
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
 // @include     *://*8chan.co/*
 // @run-at      document-start
-// @version     0.4.2
+// @version     0.4.1
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /**
- * 8chan Z v0.4.2
+ * 8chan Z v0.4.1
  * https://github.com/nokosage/8chan-Z/
  *
  * Developers:
@@ -439,7 +439,7 @@
 
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.4.2',
+    VERSION: '0.4.1',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',
@@ -451,7 +451,7 @@
     Main: function() {
       Main.css = $.css('\
 #top_menu {\
-  box-shadow: 0 7px 4px -4px rgba(0, 0, 0, 0.5);\
+  box-shadow: 0 -15px 6px 15px rgba(0, 0, 0, 0.5);\
   left: 0;\
   line-height: 1.6;\
   margin: -1px 0 0 -5px;\
@@ -462,12 +462,11 @@
   z-index: 100;\
 }\
 .navButtons {\
-  display: block;\
-  margin: 0 auto;\
-  position: relative;\
+  display: inline-block;\
+  left: calc(50% - 30px);\
+  margin: 0 5px;\
+  position: absolute;\
   text-align: center;\
-  white-space: nowrap;\
-  width: 75px;\
 }\
 .navButtons > a {\
   margin: 0 2px;\
@@ -509,9 +508,6 @@ div.post.reply {\
 .classNum a, .menu-button {\
   margin: 0 !important;\
   text-decoration: none;\
-}\
-#nativeMenu {\
-  float: left;\
 }\
 .menu-button:before {\
   content: "";\
@@ -561,7 +557,6 @@ div.post div.file .fileThumb {\
   }
 
   var Menu = {
-    initialized: false,
     button: false,
     styleChanger: false,
     top_menu: false,
@@ -570,22 +565,12 @@ div.post div.file .fileThumb {\
     navButtons: false,
     init: function() {
       var _ref;
-      if (Menu.initialized === true) return;
       //Top Menu
       Menu.top_menu = (_ref = $('div.boardlist')) ? _ref : false;
       $.addClass($.att(Menu.top_menu, 'id', 'top_menu'), 'pages');
-      Menu.nativeMenu = $.elm('span', {
-        id: 'nativeMenu'
-      }, Menu.top_menu);
-      for (var c = 0; $('.sub[data-description="'+c+'"]', db); c++){
-        $.add(Menu.nativeMenu, $('.sub[data-description="'+c+'"]', db));
-      }
       Menu.navButtons = $.elm('span', {
         class: 'navButtons'
       }, Menu.top_menu);
-      $.time(3000, function() {
-        if (_ref = $('#mod_options')) $.before(_ref, Menu.navButtons);
-      });
       $.elm('a', {
         href: '#top',
         class: 'fa fa-arrow-up'
@@ -626,7 +611,9 @@ div.post div.file .fileThumb {\
       }, Menu.navButtons), $('[href="#bottom"]', Menu.navButtons));
       $.before($.tn(' / '), Menu.button);
       $.after($.tn(' / '), Menu.button);
-      Menu.initialized = true;
+      $.time(3000, function() {
+        Menu.navButtons.style.left = 'calc(50% - ' + ((_ref = window.getComputedStyle(Menu.navButtons)) ? (parseInt(_ref.width) + parseInt(_ref.marginLeft) + parseInt(_ref.marginRight)) / 2 : 0) + 'px)';
+      });
     }
   };
 

@@ -441,7 +441,7 @@
     NAMESPACE: '8chan-Z.',
     VERSION: '0.4.5',
     PROTOCOL: location.protocol,
-    HOST: '8chan.co',
+    HOST: '8ch.net',
     view: 'none',
     board: false,
     threads: []
@@ -601,11 +601,11 @@ div.post div.file .fileThumb {\
       });
       Menu.backTos = $.elm('span', {}, Menu.topLeft);
       Menu.backToBoard = $.text($.elm('a', {
-        href: Info.PROTOCOL + '//8chan.co/' + Info.board + '/'
+        href: Info.PROTOCOL + '//' + Info.HOST + /' + Info.board + '/'
       }, Menu.backTos), Info.board);
       $.after($.tn(' / '), Menu.backToBoard);
       Menu.backToCatalog = $.text($.elm('a', {
-        href: Info.PROTOCOL + '//8chan.co/' + Info.board + '/catalog.html'
+        href: Info.PROTOCOL + '//' + Info.HOST + /' + Info.board + '/catalog.html'
       }, Menu.backTos), 'catalog');
       $.after($.tn(' / '), Menu.backToCatalog);
       Menu.showTopLeftMenu = $.elm('a', {

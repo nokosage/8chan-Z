@@ -4,16 +4,16 @@
 // @description Attempts to improve/overhaul the 8chan experience.
 // @author      nokosage
 // @license     MIT; https://github.com/nokosage/8chan-Z/blob/master/LICENSE
-// @include     *://*8chan.co/*
+// @include     *://*8ch*
 // @run-at      document-start
-// @version     0.4.4
+// @version     0.4.5
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.meta.js
 // @downloadURL https://raw.githubusercontent.com/nokosage/8chan-Z/master/8chan-Z.user.js
 // ==/UserScript==
 
 /**
- * 8chan Z v0.4.4
+ * 8chan Z v0.4.5
  * https://github.com/nokosage/8chan-Z/
  *
  * Developers:
@@ -439,7 +439,7 @@
 
   var Info = {
     NAMESPACE: '8chan-Z.',
-    VERSION: '0.4.4',
+    VERSION: '0.4.5',
     PROTOCOL: location.protocol,
     HOST: '8chan.co',
     view: 'none',

@@ -605,7 +605,7 @@ div.post div.file .fileThumb {\
       }, Menu.backTos), Info.board);
       $.after($.tn(' / '), Menu.backToBoard);
       Menu.backToCatalog = $.text($.elm('a', {
-        href: Info.PROTOCOL + '//' + Info.HOST + /' + Info.board + '/catalog.html'
+        href: Info.PROTOCOL + '//' + Info.HOST + '/' + Info.board + '/catalog.html'
       }, Menu.backTos), 'catalog');
       $.after($.tn(' / '), Menu.backToCatalog);
       Menu.showTopLeftMenu = $.elm('a', {

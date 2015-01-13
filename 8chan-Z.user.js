@@ -601,7 +601,7 @@ div.post div.file .fileThumb {\
       });
       Menu.backTos = $.elm('span', {}, Menu.topLeft);
       Menu.backToBoard = $.text($.elm('a', {
-        href: Info.PROTOCOL + '//' + Info.HOST + /' + Info.board + '/'
+        href: Info.PROTOCOL + '//' + Info.HOST + '/' + Info.board + '/'
       }, Menu.backTos), Info.board);
       $.after($.tn(' / '), Menu.backToBoard);
       Menu.backToCatalog = $.text($.elm('a', {
